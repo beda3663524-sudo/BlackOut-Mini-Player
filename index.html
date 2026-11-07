@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Music Player – BlackOut</title>
+    <link rel="shortcut icon" href="./favicon.webp" type="image/x-icon">
+    <style>
+        :root {
+            --pri: #101010;
+            --sec: #e5e5e5;
+        }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            background: #101010;
+            color: #101010;
+        }
+        .welcome__h1 {
+            text-align: center;
+            padding-top: 25px;
+            color: #e5e5e5;
+        }
+        .player_pos {
+            display: flex;
+            justify-content: center;
+            margin-top: 100px;
+        }
+        .player__cont {
+            background: var(--sec);
+            width: 90%;
+            height: 360px;
+            border-radius: 50px;
+            display: flex;
+            justify-content: start;
+            align-items: center;
+            flex-direction: column;
+            .name__music {
+                color: var(--pri);
+                font-size: 26px;
+                position: relative;
+                top: 20px;
+            }
+            .disk {
+                background: black;
+                width: 100px;
+                height: 100px;
+                border-radius: 50%;
+                margin-top: 70px;
+            }
+            .disk::before {
+                content: '';
+                width: 100px;
+                height: 100px;
+                position: absolute;
+                background: repeating-radial-gradient(circle, #e5e5e5 0 1px, transparent 2px 8px);
+                z-index: 2;
+            }
+            .acitve {
+                animation: spin linear infinite;
+            }
+            @keyframes spin {
+                from {transform: rotate(0deg);}
+                to {transform: rotate(360deg);}
+            }
+            .prev {
+                background: none;
+                border: 2px solid #101010;
+                width: 50px;
+                height: 50px;
+                border-radius: 50%;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                position: relative;
+                top: 75px;
+                right: 75px;
+            }
+            .pp {
+                background: none;
+                border: 2px solid #101010;
+                width: 50px;
+                height: 50px;
+                border-radius: 50%;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                position: relative;
+                top: 25px;
+                right: 0;
+            }
+            .next {
+                background: none;
+                border: 2px solid #101010;
+                width: 50px;
+                height: 50px;
+                border-radius: 50%;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                position: relative;
+                top: -25px;
+                right: -75px;
+            }
+            .progress__container {
+                position: relative;
+                bottom: 100px;
+                background: var(--pri);
+                width: 235px;
+                height: 7.5px;
+                border-radius: 100px;
+                display: flex;
+                justify-content: start;
+                align-items: center;
+            }
+            .progress__bar{
+                width: 0px;
+                height: 5px;
+                background: var(--sec);
+                border-radius: 100px;
+                margin-left: 0px;
+            }
+        }
+        .footer {
+            width: 100%;
+            height: 75px;
+            background: var(--sec);
+            text-align: center;
+            position: absolute;
+            bottom: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            .footer__h1 {
+                font-size: 26px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header><h1 class="welcome__h1">Музыкальный плэер BlackOut</h1></header>
+    <main>
+        <div class="player_pos">
+            <div class="player__cont">
+            <h3 class="name__music">name</h3>
+                <span class="disk"></span>
+                <div class="prev"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-player-track-prev"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M21 5v14l-8 -7l8 -7" /><path d="M10 5v14l-8 -7l8 -7" /></svg></div>
+                <div class="pp"><img class="imgpp" src="./pp/play.svg" alt="pause"></div>
+                <div class="next"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-player-track-next"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M3 5v14l8 -7l-8 -7" /><path d="M14 5v14l8 -7l-8 -7" /></svg></div>
+                <audio class="audio" src="./Пустой Вокзал.mp3"></audio>
+                <div class="progress__container">
+                    <div class="progress__bar"></div>
+                </div>
+            </div>
+        </div>
+    </main>
+    <footer>
+        <div class="footer">
+            <h1 class="footer__h1">&copy; Все права защищены.</h1>
+        </div>
+    </footer>
+    <script>
+        const songs = ['Пустой Вокзал', 'Sunflower', 'Ведьма и осёл']
+        const namesong = document.querySelector('.name__music')
+        const audio = document.querySelector('.audio')
+        const ppimg = document.querySelector('.imgpp')
+        const pp = document.querySelector('.pp')
+        const prev = document.querySelector('.prev')
+        const next = document.querySelector('.next')
+        const disk = document.querySelector('.disk')
+        const progress = document.querySelector('.progress__bar')
+        const progressCont = document.querySelector('.progress__container')
+
+        let songIndex = 0
+
+        function loadSong(song) {
+            namesong.innerHTML = song
+            audio.src = './audio/' + song + '.mp3'
+        }
+        loadSong(songs[songIndex])
+
+        function playSong() {
+            disk.classList.add('active')
+            pp.classList.add('play')
+            ppimg.src = './pp/pause.svg'
+            audio.play()
+        }
+        function pauseSong() {
+            disk.classList.remove('active')
+            pp.classList.remove('play')
+            ppimg.src = './pp/play.svg'
+            audio.pause()
+        }
+        pp.addEventListener('click', () => {
+            const playing = pp.classList.contains('play')
+            if (playing) {
+                pauseSong()
+            } else {
+                playSong()
+            }
+        })
+        function nextSong() {
+            songIndex++
+            if(songIndex > songs.length -1) {
+                songIndex = 0
+            }
+            loadSong(songs[songIndex])
+            playSong()
+        }
+        next.addEventListener('click', nextSong)
+        function prevSong () {
+            songIndex--
+            if(songIndex < 0) {
+                songIndex = songs.length -1
+            }
+            loadSong(songs[songIndex])
+            playSong()
+        }
+        prev.addEventListener('click', prevSong)
+        function updateProgress(e) {
+            const {duration, currentTime} = e.srcElement
+            const progressPercent = (currentTime / duration) * 100
+            progress.style.width = progressPercent + '%'
+        }
+        audio.addEventListener('timeupdate', updateProgress)
+
+        function changeProgress (e) {
+            const width = this.clientWidth
+            const clickX = e.offsetX
+            const duration = audio.duration
+
+            audio.currentTime = (clickX / width) * duration
+        }
+        progressCont.addEventListener('click', changeProgress)
+    </script>
+</body>
+</html>
